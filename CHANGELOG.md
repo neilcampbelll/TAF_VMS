@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed bugs in catch and effort allocation procedures
 - Standardized treatment of NA values throughout the workflow
 
-## [1.0.0] - 2024-04-24
+## [1.0.1] - 2024-04-24
 
 Initial public release of the workflow.
 
