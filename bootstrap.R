@@ -17,13 +17,16 @@ library(pacman)
 dirs <- c("bootstrap", "data", "model", "output", "report")
 sapply(dirs, dir.create, showWarnings = FALSE, recursive = TRUE)
 
+# Copy raw data files from data folder to bootstrap folder
+message("Checking for raw data files to copy to bootstrap folder...")
+
 # Load metadata configuration if it exists, otherwise create it
 if (file.exists("bootstrap/config.R")) {
   source("bootstrap/config.R")
 } else {
   # Default config
   cfg <- list(
-    yearsToSubmit = c(2018, 2023),
+    yearsToSubmit = c(2018, 2022),
     autoDetectionGears = c("TBB", "OTB", "OTT", "OTM", "SSC", "SDN", "DRB", "PTB", "HMD", "MIS"),
     visualInspection = FALSE,
     linkEflaloTacsat = c("trip"),
@@ -33,7 +36,7 @@ if (file.exists("bootstrap/config.R")) {
     lanThres = 1.5   # Maximum difference in log10-transformed sorted weights
   )
   # Save to bootstrap directory
-  save(cfg, file = "bootstrap/config.R")
+  save(cfg, file = "bootstrap/config.RData")
 }
 
 # Load and install required packages via pacman
@@ -137,6 +140,27 @@ if (file.exists("utilities.R")) {
 
 # source from the bootstrap folder
 source("bootstrap/utilities.R")
+
+for(year in cfg$yearsToSubmit) {
+  # Check for TACSAT files
+  tacsat_source <- file.path("data", paste0("tacsat_", year, ".RData"))
+  tacsat_dest <- file.path("bootstrap", paste0("tacsat_", year, ".RData"))
+
+  if(file.exists(tacsat_source) && !file.exists(tacsat_dest)) {
+    message(paste("Copying", tacsat_source, "to", tacsat_dest))
+    file.copy(tacsat_source, tacsat_dest)
+  }
+
+  # Check for EFLALO files
+  eflalo_source <- file.path("data", paste0("eflalo_", year, ".RData"))
+  eflalo_dest <- file.path("bootstrap", paste0("eflalo_", year, ".RData"))
+
+  if(file.exists(eflalo_source) && !file.exists(eflalo_dest)) {
+    message(paste("Copying", eflalo_source, "to", eflalo_dest))
+    file.copy(eflalo_source, eflalo_dest)
+  }
+}
+
 
 # End of bootstrap script
 message("Bootstrap completed successfully.")
