@@ -9,7 +9,7 @@
 # - Saves final output files
 
 # Load configuration and utilities
-source("bootstrap/config.R")
+load("bootstrap/config.RData")
 source("bootstrap/utilities.R")
 
 # -----------------------------------------------------------------------------
@@ -23,29 +23,29 @@ table2 <- NULL
 # Process each year
 for(year in cfg$yearsToSubmit) {
   message(paste0("Creating tables for year ", year))
-  
+
   # Check if enriched data exists for this year
   tacsat_path <- file.path("model", paste0("tacsatEflaloEnriched", year, ".RData"))
   eflalo_path <- file.path("model", paste0("updatedEflalo", year, ".RData"))
-  
+
   if (!file.exists(tacsat_path) || !file.exists(eflalo_path)) {
     warning(paste("Processed data for year", year, "not found. Skipping."))
     next
   }
-  
+
   # Load data
   load(tacsat_path)  # loads 'tacsatEflalo'
   load(eflalo_path)  # loads 'eflalo'
-  
+
   # Process eflalo for Table 2
   # Extract year and month
   eflalo$Year <- year(eflalo$FT_LDATIM)
   eflalo$Month <- month(eflalo$FT_LDATIM)
-  
+
   # Calculate fishing days (assuming 1 day per record)
   eflalo$INTV <- 1
   eflalo$record <- 1
-  
+
   # Aggregate records by vessel
   res <- aggregate(
     eflalo$record,
@@ -53,34 +53,34 @@ for(year in cfg$yearsToSubmit) {
     FUN = sum,
     na.rm = TRUE
   )
-  
+
   colnames(res) <- c("VE_COU", "VE_REF", "LE_CDAT", "nrRecords")
-  
+
   # Merge back to eflalo
   eflalo <- merge(eflalo, res, by = c("VE_COU", "VE_REF", "LE_CDAT"))
-  
+
   # Adjust fishing days and calculate kW-days
   eflalo$INTV <- eflalo$INTV / eflalo$nrRecords
   eflalo$kwDays <- eflalo$VE_KW * eflalo$INTV
-  
+
   # Define record type and columns for Table 2
   RecordType <- "LE"
   cols <- c(
     "VE_REF", "VE_COU", "Year", "Month", "LE_RECT", "LE_GEAR", "LE_MET",
     "VE_LEN", "tripInTacsat", "INTV", "kwDays", "LE_KG_TOT", "LE_EURO_TOT"
   )
-  
+
   # Append to Table 2
   if (is.null(table2)) {
     table2 <- cbind(RT = RecordType, eflalo[, cols])
   } else {
     table2 <- rbind(table2, cbind(RT = RecordType, eflalo[, cols]))
   }
-  
+
   # Process tacsatEflalo for Table 1
   # Convert to data frame
   tacsatEflalo <- data.frame(tacsatEflalo)
-  
+
   # Define record type and columns for Table 1
   RecordType <- "VE"
   cols <- c(
@@ -88,14 +88,14 @@ for(year in cfg$yearsToSubmit) {
     "LE_MET", "SI_SP", "INTV", "VE_LEN", "kwHour", "VE_KW", "LE_KG_TOT", "LE_EURO_TOT",
     "GEARWIDTHKM", "SA_KM2"
   )
-  
+
   # Append to Table 1
   if (is.null(table1)) {
     table1 <- cbind(RT = RecordType, tacsatEflalo[, cols])
   } else {
     table1 <- rbind(table1, cbind(RT = RecordType, tacsatEflalo[, cols]))
   }
-  
+
   message(paste("Tables for year", year, "created."))
 }
 
@@ -165,7 +165,7 @@ table1Save <- table1 %>%
   separate(col = LE_MET, c("MetierL4", "MetierL5"), sep = '_', extra = "drop", remove = FALSE) %>%
   # Group by required dimensions
   group_by(
-    RecordType = RT, CountryCode = VE_COU, Year, Month, 
+    RecordType = RT, CountryCode = VE_COU, Year, Month,
     MetierL4, MetierL5, MetierL6 = LE_MET, VesselLengthRange = LENGTHCAT,
     Habitat = MSFD_BBHT, Depth = depth, Csquare
   ) %>%
@@ -196,7 +196,7 @@ table2Save <- table2 %>%
   separate(col = LE_MET, c("MetierL4", "MetierL5"), sep = '_', remove = FALSE) %>%
   # Group by required dimensions
   group_by(
-    RecordType = RT, CountryCode = VE_COU, Year, Month, 
+    RecordType = RT, CountryCode = VE_COU, Year, Month,
     MetierL4, MetierL5, MetierL6 = LE_MET, VesselLengthRange = LENGTHCAT,
     ICESrectangle = LE_RECT, VMSEnabled = tripInTacsat
   ) %>%
@@ -327,9 +327,9 @@ saveRDS(table1Save, file.path("output", "table1Save.rds"))
 saveRDS(table2Save, file.path("output", "table2Save.rds"))
 
 # Save as CSV files for submission
-write.table(table1Save, file.path("output", "table1Save.csv"), 
+write.table(table1Save, file.path("output", "table1Save.csv"),
             na = "", row.names = FALSE, col.names = TRUE, sep = ",", quote = FALSE)
-write.table(table2Save, file.path("output", "table2Save.csv"), 
+write.table(table2Save, file.path("output", "table2Save.csv"),
             na = "", row.names = FALSE, col.names = TRUE, sep = ",", quote = FALSE)
 
 # Create a validation report
@@ -358,3 +358,4 @@ if (!is.null(getOption("icesConnect.username"))) {
   message("icesConnect::set_username('your_username')")
   message("Then run the icesVMS submission functions.")
 }
+
