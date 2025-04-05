@@ -1,6 +1,6 @@
 # ICES VMS and Logbook Data Call - TAF Implementation
 
-This repository provides a standardized workflow for preparing and submitting data to the ICES Data Call for VMS/Logbook data, following the ICES Transparent Assessment Framework (TAF) structure. The workflow processes fishing activities data in the North East Atlantic and Baltic Sea, preparing it according to ICES requirements.
+This repository provides a standardised workflow for preparing and submitting data to the ICES Data Call for VMS/Logbook data, following the ICES Transparent Assessment Framework (TAF) structure. The workflow processes fishing activities data in the North East Atlantic and Baltic Sea, preparing it according to ICES requirements.
 
 ## Repository Structure
 
