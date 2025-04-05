@@ -1,4 +1,5 @@
 # Ignore TAF directories with data and results
+/boot/initial/data/
 /boot/data/
 /boot/software/
 /boot/library/
