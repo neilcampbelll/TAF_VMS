@@ -1,9 +1,11 @@
 # Ignore TAF directories with data and results
-bootstrap/
-data/
-model/
-output/
-report/
+/boot/data/
+/boot/software/
+/boot/library/
+/data/
+/model/
+/output/
+/report/
 
 # History files
 .Rhistory
