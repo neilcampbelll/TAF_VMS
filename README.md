@@ -32,10 +32,10 @@ The workflow follows the ICES TAF structure:
 2. Run the bootstrap script to set up the environment:
 
 ```r
-Rscript bootstrap.R
+source(bootstrap.R)
 ```
 
-3. Place your raw TACSAT and EFLALO data files in the bootstrap directory with the naming convention:
+3. Place your raw TACSAT and EFLALO RData files in the data directory with the naming convention:
    - tacsat_YYYY.RData
    - eflalo_YYYY.RData
 
@@ -44,11 +44,10 @@ Rscript bootstrap.R
 Run the scripts in the following order:
 
 ```r
-Rscript bootstrap.R  # Setup environment
-Rscript data.R       # Clean data
-Rscript model.R      # Process and analyze
-Rscript output.R     # Create submission tables
-Rscript report.R     # Generate visualizations
+source(data.R)        # Clean data
+source(model.R)      # Process and analyze
+source(output.R)     # Create submission tables
+source(report.R)     # Generate visualizations
 ```
 
 ## Important Note
