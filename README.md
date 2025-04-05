@@ -29,10 +29,11 @@ The workflow follows the ICES TAF structure:
 ### Installation
 
 1. Clone this repository
-2. Run the bootstrap script to set up the environment:
+2. Install any missing required packages by running:
 
 ```r
-source(bootstrap.R)
+libary(icesTAF)
+taf.boot()
 ```
 
 3. Place your raw TACSAT and EFLALO RData files in the data directory with the naming convention:
@@ -44,10 +45,10 @@ source(bootstrap.R)
 Run the scripts in the following order:
 
 ```r
-source(data.R)        # Clean data
-source(model.R)      # Process and analyze
-source(output.R)     # Create submission tables
-source(report.R)     # Generate visualizations
+source.taf("data")        # Clean data
+source.taf("model")      # Process and analyze
+source.taf("output")     # Create submission tables
+source.taf("report")     # Generate visualizations
 ```
 
 ## Important Note
@@ -71,7 +72,7 @@ Detailed documentation is available in the `docs/` directory:
 
 ## Version Information
 
-**Current Version: 1.0.0-TAF**  
+**Current Version: 1.0.0-TAF**
 See the [CHANGELOG.md](CHANGELOG.md) for details on version history.
 
 ## License

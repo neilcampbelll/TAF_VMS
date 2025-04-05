@@ -7,6 +7,14 @@
 # - Cleans both datasets
 # - Saves processed data to the 'data' directory
 
+library(icesTAF)
+taf.library(vmstools)
+library(dplyr)
+library(sfdSAR)
+library(icesVocab)
+library(icesVMS)
+library(lubridate)
+
 # Load TAF config and utilities
 load("boot/data/config/config.RData")
 source("utilities.R")
