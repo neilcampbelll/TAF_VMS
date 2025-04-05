@@ -2,24 +2,24 @@
 # This file contains all settings and parameters that might be adjusted between runs
 
 # Set ICES SharePoint credentials (replace with your username)
-options(icesSharePoint.username = "your.username@institution.org")  
+options(icesSharePoint.username = "your.username@institution.org")
 
 # Define the years to process
 cfg <- list(
   # Years to process and submit
-  yearsToSubmit = 2009:2023,
-  
+  yearsToSubmit = c(2018,2022),
+
   # Gear types for which automated fishing activity detection will be applied
   # Other gears will use simple speed rule classification
   autoDetectionGears = c("TBB", "OTB", "OTT", "OTM", "SSC", "SDN", "DRB", "PTB", "HMD", "MIS"),
-  
+
   # Whether to visually analyze speed histograms for fishing activity detection
   # Set to FALSE for unattended execution, TRUE for interactive mode
   visualInspection = FALSE,
-  
+
   # How to link EFLALO records to TACSAT points
   linkEflaloTacsat = c("trip"),
-  
+
   # Analysis thresholds
   spThres = 20,   # Maximum speed threshold in analyses in nm
   intThres = 5,   # Minimum difference in time interval in minutes to prevent pseudo duplicates
@@ -27,11 +27,11 @@ cfg <- list(
   lanThres = 1.5   # Maximum difference in log10-transformed sorted weights
 )
 
-# Paths configuration 
+# Paths configuration
 # These will be created by bootstrap.R if they don't exist
 cfg$paths <- list(
   bootstrap = "bootstrap",
-  data = "data", 
+  data = "data",
   model = "model",
   output = "output",
   report = "report"
