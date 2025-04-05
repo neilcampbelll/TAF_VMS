@@ -8,15 +8,15 @@
 # - Saves processed data to the 'data' directory
 
 # Load TAF config and utilities
-load("bootstrap/config.RData")
-source("bootstrap/utilities.R")
+load("boot/data/config/config.RData")
+source("utilities.R")
 
 # Load supporting data
-load("bootstrap/harbours_alt.RData")
-load("bootstrap/ICESareas.RData")
+load("boot/data/HARBOURS/harbours_alt.RData")
+load("boot/data/ICESareas_vmstools/ICESareas.RData")
 
 # Create directory to store intermediate result statistics
-if (!dir.exists("data/stats")) dir.create("data/stats", recursive = TRUE)
+mkdir("data/stats")
 
 # Process data for each year
 for(year in cfg$yearsToSubmit) {
@@ -25,8 +25,8 @@ for(year in cfg$yearsToSubmit) {
   # -----------------------------------------------------------------------------
   # 1. Load raw TACSAT and EFLALO data
   # -----------------------------------------------------------------------------
-  tacsat_path <- file.path("bootstrap", paste0("tacsat_", year, ".RData"))
-  eflalo_path <- file.path("bootstrap", paste0("eflalo_", year, ".RData"))
+  tacsat_path <- taf.data.path("TACSAT", paste0("tacsat_", year, ".RData"))
+  eflalo_path <- taf.data.path("EFLALO", paste0("eflalo_", year, ".RData"))
 
   if (!file.exists(tacsat_path) || !file.exists(eflalo_path)) {
     warning(paste("Raw data files for year", year, "not found. Skipping."))

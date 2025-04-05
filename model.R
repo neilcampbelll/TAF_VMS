@@ -8,16 +8,19 @@
 # - Redistributes logbook information
 # - Calculates swept area ratios
 
+library(TAF)
+mkdir("model")
+
 # Load configuration and utilities
-load("bootstrap/config.RData")
-source("bootstrap/utilities.R")
+load("boot/data/config/config.RData")
+source("utilities.R")
 
 # Load habitat and bathymetry data
-load("bootstrap/eusm.RData")
-load("bootstrap/bathy.RData")
+load("boot/data/eusm/eusm.RData")
+load("boot/data/gebco/bathy.RData")
 
 # Create model output directory
-if (!dir.exists("model")) dir.create("model")
+mkdir("model")
 
 # Process each year
 for(year in cfg$yearsToSubmit) {
