@@ -27,16 +27,6 @@ cfg <- list(
   lanThres = 1.5   # Maximum difference in log10-transformed sorted weights
 )
 
-# Paths configuration
-# These will be created by bootstrap.R if they don't exist
-cfg$paths <- list(
-  bootstrap = "bootstrap",
-  data = "data",
-  model = "model",
-  output = "output",
-  report = "report"
-)
-
 # Set default fishing speed ranges for gears not in autoDetectionGears
 # Format: gear code = c(min speed, max speed)
 cfg$defaultSpeeds <- list(
@@ -75,4 +65,4 @@ cfg$logging <- list(
 )
 
 # Save the configuration
-save(cfg, file = "bootstrap/config.RData")
+save(cfg, file = "config.RData")
