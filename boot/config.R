@@ -1,8 +1,16 @@
 # Configuration file for the ICES VMS Data Call TAF workflow
 # This file contains all settings and parameters that might be adjusted between runs
 
-# Set ICES SharePoint credentials (replace with your username)
-options(icesSharePoint.username = "your.username@institution.org")
+# Set ICES SharePoint credentials (uncomment and replace with your username)
+# options(icesSharePoint.username = "your.username")
+
+# Check if ICES SharePoint credentials need to be set
+if (is.null(getOption("icesSharePoint.username"))) {
+  # Inform user to set credentials
+  message("ICES SharePoint username needs to be set. Please add to config.R file.")
+  message("Example: options(icesSharePoint.username = 'your.username')")
+}
+
 
 # Define the years to process
 cfg <- list(
