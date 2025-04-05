@@ -186,29 +186,86 @@ for(year in cfg$yearsToSubmit) {
     storeScheme$peaks[which(is.na(storeScheme$peaks) == TRUE)] <- 5
   }
 
-  # Apply activity detection
+  # Apply activity detection with improved error handling
   if (nrow(subTacsat) > 0) {
-    acTa <- act.tac(
-      subTacsat,
-      units = "year",
-      analyse.by = "LE_L5MET",
-      storeScheme = storeScheme,
-      plot = TRUE,
-      level = "all"
+    # Create a table to store results
+    summary_table <- data.frame(
+      LE_L5MET = character(0),
+      min_SI_SP = numeric(0),
+      max_SI_SP = numeric(0)
     )
 
-    subTacsat$SI_STATE <- acTa
+    # Process by metier to allow graceful handling of convergence failures
+    metiers <- unique(subTacsat$LE_L5MET)
+
+    for (met in metiers) {
+      met_tacsat <- subset(subTacsat, LE_L5MET == met)
+      if (nrow(met_tacsat) < 50) {
+        # Too few points for reliable model
+        warning(paste0("Warning: Too few points (", nrow(met_tacsat), ") for metier ", met, ". Default fishing speeds of 1.5 - 4.5 knots assigned."))
+
+        # Assign default speeds
+        met_tacsat$SI_STATE <- ifelse(met_tacsat$SI_SP >= 1.5 & met_tacsat$SI_SP <= 4.5, "f", "s")
+
+        # Add to summary table
+        summary_table <- rbind(summary_table, data.frame(
+          LE_L5MET = met,
+          min_SI_SP = 1.5,
+          max_SI_SP = 4.5
+        ))
+      } else {
+        # Try to fit model but catch errors
+        met_storeScheme <- storeScheme[storeScheme$analyse.by == met,]
+
+        tryCatch({
+          # Try to apply activity detection
+          act_result <- act.tac(
+            met_tacsat,
+            units = "year",
+            analyse.by = "LE_L5MET",
+            storeScheme = met_storeScheme,
+            plot = TRUE,
+            level = "all"
+          )
+
+          # If successful, assign the result
+          met_tacsat$SI_STATE <- act_result
+
+          # Add to summary table if there are fishing points
+          if (any(met_tacsat$SI_STATE == "f")) {
+            fishing_speeds <- met_tacsat[met_tacsat$SI_STATE == "f", "SI_SP"]
+            summary_table <- rbind(summary_table, data.frame(
+              LE_L5MET = met,
+              min_SI_SP = min(fishing_speeds),
+              max_SI_SP = max(fishing_speeds)
+            ))
+          }
+        },
+        error = function(e) {
+          # On error, provide warning and use default values
+          warning(paste0("Warning: No model convergence for ", met, ". Default fishing speeds of 1.5 - 4.5 knots assigned. Check this aligns with your understanding of behaviour in this fishery."))
+          warning(paste0("Error message: ", e$message))
+
+          # Assign default speeds
+          met_tacsat$SI_STATE <- ifelse(met_tacsat$SI_SP >= 1.5 & met_tacsat$SI_SP <= 4.5, "f", "s")
+
+          # Add to summary table
+          summary_table <- rbind(summary_table, data.frame(
+            LE_L5MET = met,
+            min_SI_SP = 1.5,
+            max_SI_SP = 4.5
+          ))
+        })
+      }
+
+      # Store results back in subTacsat
+      subTacsat$SI_STATE[subTacsat$LE_L5MET == met] <- met_tacsat$SI_STATE
+    }
+
+    # Add ID to subTacsat for later use
     subTacsat$ID <- 1:nrow(subTacsat)
 
-    # Check results
-    summary_table <- subTacsat %>%
-      filter(SI_STATE == "f") %>%
-      group_by(LE_L5MET) %>%
-      dplyr::summarise(
-        min_SI_SP = min(SI_SP),
-        max_SI_SP = max(SI_SP)
-      )
-
+    # Output summary table
     message(paste("Fishing speed ranges by metier for", year, ":"))
     print(summary_table)
 
