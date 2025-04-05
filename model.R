@@ -8,7 +8,7 @@
 # - Redistributes logbook information
 # - Calculates swept area ratios
 
-library(TAF)
+library(icesTAF)
 mkdir("model")
 
 # Load configuration and utilities
@@ -18,6 +18,8 @@ source("utilities.R")
 # Load habitat and bathymetry data
 load("boot/data/eusm/eusm.RData")
 load("boot/data/gebco/bathy.RData")
+
+valid_metiers <- unique(fread(taf.data.path("RDB_ISSG_Metier_list.csv"))$Metier_level5)
 
 # Create model output directory
 mkdir("model")
