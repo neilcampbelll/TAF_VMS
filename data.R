@@ -140,7 +140,7 @@ for(year in cfg$yearsToSubmit) {
     dplyr::select(-geometry, -unique_id)
 
   # Save clean TACSAT
-  save(tacsat, file = file.path("data", paste0("cleanTacsat", year, ".RData")))
+  save(tacsat, file = taf.data.path(paste0("cleanTacsat", year, ".RData")))
 
   message("Cleaning tacsat completed for year ", year)
   print(remrecsTacsat)
@@ -271,7 +271,7 @@ for(year in cfg$yearsToSubmit) {
   save(remrecsEflalo, file = file.path("data/stats", paste0("remrecsEflalo", year, ".RData")))
 
   # Save clean EFLALO
-  save(eflalo, file = file.path("data", paste0("cleanEflalo", year, ".RData")))
+  save(eflalo, file = taf.data.path(paste0("cleanEflalo", year, ".RData")))
 
   message("Cleaning eflalo completed for year ", year)
   print(remrecsEflalo)
