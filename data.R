@@ -33,8 +33,8 @@ for(year in cfg$yearsToSubmit) {
   # -----------------------------------------------------------------------------
   # 1. Load raw TACSAT and EFLALO data
   # -----------------------------------------------------------------------------
-  tacsat_path <- taf.data.path("TACSAT", paste0("tacsat_", year, ".RData"))
-  eflalo_path <- taf.data.path("EFLALO", paste0("eflalo_", year, ".RData"))
+  tacsat_path <- taf.data.path(paste0("tacsat_", year, ".RData"))
+  eflalo_path <- taf.data.path(paste0("eflalo_", year, ".RData"))
 
   if (!file.exists(tacsat_path) || !file.exists(eflalo_path)) {
     warning(paste("Raw data files for year", year, "not found. Skipping."))
