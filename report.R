@@ -7,10 +7,9 @@
 # - Aggregated statistics by fleet segment
 # - Quality control reports
 
-# Load required packages
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(data.table, dplyr, sf, mapview, stars, raster, terra, leaflet,
-               leafem, vmstools, icesVMS, htmlwidgets, sfdSAR)
+
+library(TAF)
+mkdir("report")
 
 # Load utility function
 '%!in%' <- function(x,y)!('%in%'(x,y))
@@ -32,15 +31,8 @@ table1 <- as.data.frame(table1)
 report_dir <- "report"
 maps_dir <- file.path(report_dir, "maps")
 
-if (!dir.exists(report_dir)) {
-  dir.create(report_dir, recursive = TRUE)
-  message("Created 'report' directory")
-}
-
-if (!dir.exists(maps_dir)) {
-  dir.create(maps_dir, recursive = TRUE)
-  message("Created 'report/maps' directory")
-}
+mkdir(report_dir)
+mkdir(maps_dir)
 
 # Grid size for C-squares
 grd_size <- 0.05

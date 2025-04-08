@@ -8,9 +8,13 @@
 # - Anonymizes vessel IDs
 # - Saves final output files
 
+library(TAF)
+
 # Load configuration and utilities
-load("bootstrap/config.RData")
-source("bootstrap/utilities.R")
+load("boot/data/config/config.RData")
+source("utilities.R")
+
+mkdir("output")
 
 # -----------------------------------------------------------------------------
 # 1. Create Table 1 (VMS) and Table 2 (logbook)
@@ -358,4 +362,3 @@ if (!is.null(getOption("icesConnect.username"))) {
   message("icesConnect::set_username('your_username')")
   message("Then run the icesVMS submission functions.")
 }
-
