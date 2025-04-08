@@ -9,6 +9,20 @@
 # - Calculates swept area ratios
 
 library(icesTAF)
+library(dplyr)
+library(sfdSAR)
+library(icesVocab)
+library(icesVMS)
+library(lubridate)
+library(data.table)
+library(ggplot2)
+
+taf.library(vmstools)
+
+# Necessary setting for spatial operations
+library(sf)
+sf::sf_use_s2(FALSE)
+
 mkdir("model")
 
 # Load configuration and utilities
@@ -17,7 +31,7 @@ source("utilities.R")
 
 # Load habitat and bathymetry data
 load("boot/data/eusm/eusm.RData")
-load("boot/data/gebco/bathy.RData")
+(load("boot/data/gebco/bathy.RData"))
 
 valid_metiers <- unique(fread(taf.data.path("RDB_ISSG_Metier_list.csv"))$Metier_level5)
 

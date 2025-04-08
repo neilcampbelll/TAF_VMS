@@ -36,7 +36,7 @@ libary(icesTAF)
 taf.boot()
 ```
 
-3. Place your raw TACSAT and EFLALO RData files in the data directory with the naming convention:
+3. Place your raw TACSAT and EFLALO RData files in the `boot\initial\data` directory with the naming convention:
    - tacsat_YYYY.RData
    - eflalo_YYYY.RData
 
