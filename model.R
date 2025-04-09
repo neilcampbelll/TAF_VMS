@@ -31,7 +31,7 @@ source("utilities.R")
 
 # Load habitat and bathymetry data
 load("boot/data/eusm/eusm.RData")
-(load("boot/data/gebco/bathy.RData"))
+load("boot/data/gebco/bathy.RData")
 
 valid_metiers <- unique(fread(taf.data.path("RDB_ISSG_Metier_list.csv"))$Metier_level5)
 
@@ -45,8 +45,8 @@ for(year in cfg$yearsToSubmit) {
   # -----------------------------------------------------------------------------
   # 1. Load clean data for current year
   # -----------------------------------------------------------------------------
-  tacsat_path <- file.path("data", paste0("cleanTacsat", year, ".RData"))
-  eflalo_path <- file.path("data", paste0("cleanEflalo", year, ".RData"))
+  tacsat_path <- taf.data.path(paste0("cleanTacsat", year, ".RData"))
+  eflalo_path <- taf.data.path(paste0("cleanEflalo", year, ".RData"))
 
   if (!file.exists(tacsat_path) || !file.exists(eflalo_path)) {
     warning(paste("Clean data for year", year, "not found. Skipping."))
@@ -104,7 +104,7 @@ for(year in cfg$yearsToSubmit) {
 
   # Save intermediate result
   tacsatp <- as.data.frame(tacsatp)
-  save(tacsatp, file = file.path("model", paste0("tacsatMerged", year, ".RData")))
+  save(tacsatp, file = taf.data.path(paste0("tacsatMerged", year, ".RData")))
 
   # -----------------------------------------------------------------------------
   # 3. Determine fishing activity
@@ -341,7 +341,7 @@ for(year in cfg$yearsToSubmit) {
   tacsatp <- orderBy(~ VE_REF + SI_DATIM, data = tacsatp)
 
   # Check for valid metiers
-  tacsatp <- tacsatp %>% filter(LE_MET %in% valid_metiers)
+  tacsatp <- tacsatp %>% filter(LE_L5MET %in% valid_metiers)
 
   # Convert fishing state to binary (1 for fishing, 0 for not fishing)
   tacsatp$SI_STATE <- ifelse(tacsatp$SI_STATE == "f", 1, 0)
