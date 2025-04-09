@@ -7,6 +7,7 @@
 # - Determines fishing activity
 # - Redistributes logbook information
 # - Calculates swept area ratios
+# - Exports filles for final stage
 
 library(icesTAF)
 library(dplyr)
